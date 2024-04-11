@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import '../../assets/styles/Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPoo, faAddressBook } from '@fortawesome/free-solid-svg-icons';
+import { faCat } from "@fortawesome/free-solid-svg-icons";
+
 
 
 const Header = () => {
@@ -16,10 +17,10 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className="navbar-nav">
                         <Link className="nav-link" to={"/"}>
-                            <FontAwesomeIcon icon={faPoo} />
+                            <FontAwesomeIcon icon={faCat} />
                         </Link>
                         <Link className="nav-link" to={"/contact"}>
-                            <FontAwesomeIcon icon={faAddressBook} />
+                            Contact
                         </Link>
                     </div>
                 </div>

@@ -1,70 +1,450 @@
-# Getting Started with Create React App
+# Routes , images et fontAwesome
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Extension Chrome pour React :
+- React Developer Tools : https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=fr
 
-## Available Scripts
+## Creation d'un nouveau projet 
 
-In the project directory, you can run:
+```shell
+npx create-react-app my-first-app
+npm install react-router-dom
+```
 
-### `npm start`
+Le react-router-dom est un package qui va te permettre de gérer tes routes entre tes pages.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Dans le dossier `src`, crée les dossiers suivants :
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+![alt text](imgReadMe/image.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Ensuite dans App.js ecris:
 
-### `npm run build`
+![alt text](imgReadMe/App.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+function App() {
+	return (
+		<div className="App">
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+		</div>
+	);
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export default App;
 
-### `npm run eject`
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Pour ajouter une image tu procede comme ceci:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```js
+import bunny from "./assets/images/bunny.webp";
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+function App() {
+	return (
+		<div className="App">
+			<img src={bunny}/>
+		</div>
+	);
+}
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+export default App;
+```
 
-## Learn More
+### Creation d'un rooter
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+On wrap `App` dans `Router`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+src\index.js
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
-### Code Splitting
+// Importation du  composant BrowserRouter depuis 'react-router-dom'. Ce composant est utilisé pour définir le comportement de la navigation dans votre application.
+import { BrowserRouter as Router } from 'react-router-dom';
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+	<React.StrictMode>
+		<Router>
+			<App />
+		</Router>
+	</React.StrictMode>
+);
+//En gros le "Router" enveloppe le composant App dans le composant Router pour activer la navigation basée sur les URL.
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+reportWebVitals();
+```
 
-### Making a Progressive Web App
+Ensuite, ouvre `App.js`, vide son contenu, puis tape `rsc` pour importer `react-router-dom`. Le fichier devrait ressembler à ceci :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+```js
+import { Routes, Route } from "react-router-dom";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+function App() {
+	return (
+		<div className="App">
+			
+		</div>
+	);
+}
 
-### Deployment
+export default App;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Tu dois ensuite rajouter le chemin de ta page comme ceci :
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```js
+import { Routes, Route } from "react-router-dom";
+
+function App() {
+	return (
+		<main className="App">
+			<Routes>
+				<Route path="/" element={<Home/>} />
+			</Routes>
+		</main>
+	);
+}
+
+export default App;
+```
+
+On va ensuite créer des composants qu'on va inclure dans l'application. Dans le dossier `components`, crée les dossiers `Home` et `Contact` comme ceci :
+
+
+![alt text](imgReadMe/components.png)
+
+Ensuite, dans chaque dossier, crée un fichier `Home.js` et `Contact.js`. Dans `Home.js`, tape `rsc` pour générer le code initial.
+
+```js
+import React from 'react';
+
+const Home = () => {
+    return (
+        <div>
+            
+        </div>
+    );
+};
+
+export default Home;
+```
+
+Fais de même dans `Contact.js`. Ensuite, dans `App.js`, tu vas rajouter ta page `Contact.js`, ce qui donne ceci :
+
+```js
+import './App.css';
+import { Route, Routes } from "react-router-dom";
+import Contact from './components/ContactPage/Contact';
+import Home from './components/HomePage/Home';
+
+function App() {
+  return (
+    <main className='App'>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+
+    </main>
+// Dans path tu note l'url que tu souhaite et dans element tu inclu ton composant 
+  );
+}
+
+export default App;
+```
+
+Maintenant, on va inclure un Wrapper. Les wrappers sont des composants qui sont appelés sur toutes tes pages, comme une navbar et un footer. C'est d'ailleurs ce qu'on va faire.
+
+Dans `components`, tu vas créer un dossier `Wrapper` et ajouter à l'intérieur des fichiers `index.js`, `Footer.js` et `Header.js`. Ça donne ceci :
+
+
+![alt text](imgReadMe/wrapper.png)
+
+Ensuite, dans `Header.js` et `Footer.js`, tape `rsc` pour générer le code initial. À noter que `rsc` va t'importer la bibliothèque React automatiquement, comme ceci :
+
+ ```js 
+import React from 'react';
+```
+Mais tu peux la supprimer car React l'importe automatiquement, ce qui donne ceci :
+
+```js
+const Header = () => {
+    return (
+        <div>
+            
+        </div>
+    );
+};
+
+export default Header;
+```
+
+Dans le composant `index.js` du Wrapper, importe `Header` et `Footer`, et utilise le destructuring pour afficher `children`, comme ceci :
+
+```js
+import Header from "./Header";
+import Footer from "./Footer";
+
+const index = ({children}) => {
+    return (
+        <>
+            <Header/>            
+            {children}
+            <Footer/>
+        </>
+    );
+};
+
+export default index;
+```
+#### Navigation
+
+Pour ajouter des liens, on n'utilisera pas la balise `<a href="">`, mais la balise `<Link>`, qui est un composant de `react-router-dom`. On va donc faire une navigation dans le header comme ceci :
+
+```js
+import { Link } from "react-router-dom";
+
+const Header = () => {
+    return (
+        <nav>
+            <ul>
+                <li><Link to={"/"}>Home</Link></li>
+                <li><Link to={"/contact"}>Contact</Link></li>
+            </ul>
+        </nav>
+    );
+};
+
+export default Header;
+```
+
+Tu peux ajouter du style à ta navigation en créant un dossier `styles` et en y ajoutant un fichier `Header.css`. Ensuite, tu l'importes, ce qui donne ceci :
+
+```js
+import { Link } from "react-router-dom";
+import '../../assets/styles/header.css';
+
+const Header = () => {
+    return (
+        <nav>
+            <ul className="d-flex">
+                <li className="nav-item"><Link to={"/"}>Home</Link></li>
+                <li className="nav-item"><Link to={"/contact"}>Contact</Link></li>
+            </ul>
+        </nav>
+    );
+};
+
+export default Header;
+```
+
+Dans `Header.css`, tu peux rajouter ceci :
+
+```css
+.d-flex {
+    display: flex;
+}
+
+.nav-item {
+    list-style: none;
+    font-size: 1.25rem;
+    margin-right: 1.25rem;
+}
+
+.nav-item a {
+    color: rgb(0, 115, 255);
+    text-decoration: none;
+}
+```
+
+Ça ne sert à rien, car on va rajouter Bootstrap XDDDDDD
+
+Dans le terminal, tu peux coller ceci :
+
+```shell
+npm i bootstrap@5.3.3
+```
+
+Et dans `index.js` de l'application (pas de ton wrapper), par exemple ici :
+
+![alt text](imgReadMe/index.png)
+
+Tu rajoutes les 2 imports suivants :
+
+```js
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap'
+```
+
+Ton composant doit donc ressembler à ceci :
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+	<React.StrictMode>
+		<Router>
+			<App />
+		</Router>
+	</React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+```
+
+Et voilà, tu as Bootstrap ! :DDD
+Maintenant, tu peux t'amuser à aller chercher un footer et une navbar de Bootstrap et les ajouter dans tes composants `Header` et `Footer`.
+/!\ N'oublie pas que tu devras remplacer les balises `<a href="">` par des balises `<Link>` de React, ce qui donne ceci :
+
+
+```js
+const Header = () => {
+    return (
+        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="#">Navbar</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div className="navbar-nav">
+                        <Link className="nav-link" to={"/"}>
+                            Accueil
+                        </Link>
+                        <Link className="nav-link" to={"/contact"}>
+                            Contact
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default Header;
+```
+
+##### Import de fontAwesome
+
+Imaginons que tu veuilles ajouter une icône de petit chat, parce que miaou. Bon, beh tu fais pas chier et tu vas voir la doc... Nan, c'est une vanne, je vais t'expliquer.
+
+Tu vas devoir installer ces packages :
+
+
+```shell
+npm i --save @fortawesome/fontawesome-svg-core
+
+npm i --save @fortawesome/free-solid-svg-icons
+npm i --save @fortawesome/free-regular-svg-icons
+npm i --save @fortawesome/free-brands-svg-icons
+
+npm i --save @fortawesome/react-fontawesome@latest
+```
+
+Ou en une ligne de commande 
+
+```shell
+npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons @fortawesome/react-fontawesome@latest
+```
+
+Maintenant, si tu veux rajouter ton petit chat, tu vas devoir importer la bibliothèque dans le composant où tu souhaites rajouter ton icône, comme ceci :
+
+```js
+import React from "react";
+import { Link } from "react-router-dom";
+import '../../assets/styles/Header.css';
+//Tu importe la bibliotheque ici
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
+
+const Header = () => {
+    return (
+        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="#">Navbar</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div className="navbar-nav">
+                        <Link className="nav-link" to={"/"}>
+                            Accueil
+                        </Link>
+                        <Link className="nav-link" to={"/contact"}>
+                            Contact
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default Header;
+```
+
+Pour récupérer ton icône de chat sur Font Awesome, tu cliques sur l'icône que tu désires, puis tu appuies sur l'onglet `React`, et juste en dessous, sur l'onglet `Individual import` :
+
+![alt text](imgReadMe/fontAwesome.png)
+
+Pour ensuite l'inclure dans ta page tu fait comme ceci:
+
+```js
+import React from "react";
+import { Link } from "react-router-dom";
+import '../../assets/styles/Header.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//Tu l'importe d'abord ici comme ceci 
+import { faCat } from "@fortawesome/free-solid-svg-icons";
+
+
+
+const Header = () => {
+    return (
+        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="#">Navbar</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div className="navbar-nav">
+                        <Link className="nav-link" to={"/"}>
+
+                            <FontAwesomeIcon icon={faCat} />
+
+                        </Link>
+                        <Link className="nav-link" to={"/contact"}>
+                            Contact
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        // Puis tu l'appel ici avec la balise <FontAwesome et le nom de ton icon >
+    );
+};
+
+export default Header;
+```
+
+Et Voila c'est fini :D
