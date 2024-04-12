@@ -5,7 +5,7 @@ import LifeCicle from './LifeCicle';
 const Home = () => {
     return (
         <Wrapper>
-            <LifeCicle />
+            <LifeCicle name={"Vivien"} />
         </Wrapper>
 
     );
