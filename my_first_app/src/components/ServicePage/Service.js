@@ -1,10 +1,11 @@
 import React from 'react';
 import Wrapper from '../Wrapper'
+import LifeCicle from './LifeCicle';
 
 const Home = () => {
     return (
         <Wrapper>
-            <h1>Nos Prestations</h1>
+            <LifeCicle />
         </Wrapper>
 
     );

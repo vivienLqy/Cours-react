@@ -22,11 +22,11 @@ const Equipe = () => {
     return (
         <div className="container">
             <div className="row">
-                {/* {personnages.map((personnage, index) => (
-                    <div key={index} className="col-md-4 mb-4"> */}
-                <Personnage nom={personnages[0].nom} img={personnages[0].img} equipage={personnages[0].equipage} />
-                {/* </div>
-                ))} */}
+                {personnages.map((personnage, index) => (
+                    <div key={index} className="col-md-4 mb-4">
+                        <Personnage nom={personnage.nom} img={personnage.img} equipage={personnage.equipage} />
+                    </div>
+                ))}
             </div>
         </div>
     );

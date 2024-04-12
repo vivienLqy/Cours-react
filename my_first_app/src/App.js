@@ -8,7 +8,7 @@ import Blog from './components/BlogPage/Blog';
 
 function App() {
   return (
-    <main className='App'>
+    <main className='App bg-dark'>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
