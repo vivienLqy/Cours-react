@@ -1,32 +1,22 @@
-import { useEffect } from "react"
+import { useEffect, useState, useRef } from "react"
 
 const FuncLifeCicle = () => {
 
-    //lors du premier rendy (componentDidMount)
-    useEffect(() => {
-        effect()
-    }, [])
+    const [name, setName] = useState('');
 
-    //lors du premier rendu (componentDidMount) à chaque nouveaux rendu (componentDidUpdate)
     useEffect(() => {
-        effect()
-    })
+        console.log('name : ', name);
+    }, [name])
 
-    //lors du premier rendy (componentDidMount) à chaque changement de l'item (componentDidUpdate)
-    useEffect(() => {
-        effect()
-    }, [items])
+    const refName = useRef();
 
-    //lors du dernier rendu (componentUnmount)
-    useEffect(() => {
-        return () => {
-            effect()
-        }
-    }, [])
+    const handleChanged = () => {
+        setName(refName.current.value);
+    }
 
     return (
         <div>
-
+            <input type="text" ref={refName} name="name" onChange={handleChanged} />
         </div>
     );
 };
