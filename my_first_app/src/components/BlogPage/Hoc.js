@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // Importer useState depuis React
 import Zoro from './Zoro';
 import Arlong from './Arlong';
 
 const Hoc = () => {
-    const [zoroHits, setZoroHits] = useState(0);
-    const [arlongHits, setArlongHits] = useState(0);
-    const [hits, setHits] = useState(0)
+    const [arlongLife, setArlongLife] = useState(100);
+    const [zoroLife, setZoroLife] = useState(100);
 
-    const countHits = (params) => {
-        if (params === 'zoro') {
-            setZoroHits(zoroHits + 1);
-        } if (params === 'arlong') {
-            setArlongHits(arlongHits + 1);
+    const reduceLife = (param) => {
+        if (param === "zoro") {
+            setArlongLife(arlongLife - 10);
+        } else if (param === "arlong") {
+            setZoroLife(zoroLife - 10);
         }
     };
 
@@ -20,8 +19,8 @@ const Hoc = () => {
             <div className='container text-center'>
                 <div className='row justify-content-center'>
                     <div className='col-12 col-md-6 my-3 mb-sm-0 d-flex justify-content-between'>
-                        <Zoro countHits={countHits} zoroHits={zoroHits} />
-                        <Arlong countHits={countHits} arlongHits={arlongHits} />
+                        <Zoro life={zoroLife} reduceLife={reduceLife} />
+                        <Arlong life={arlongLife} reduceLife={reduceLife} />
                     </div>
                 </div>
             </div>
