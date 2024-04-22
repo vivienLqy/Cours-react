@@ -1,7 +1,10 @@
-
+import React from 'react';
 import ArlongImg from '../../assets/img/Arlong.webp';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandFist } from '@fortawesome/free-solid-svg-icons';
+import { faGratipay } from '@fortawesome/free-brands-svg-icons';
 
-const Arlong = () => {
+const Arlong = ({ countHits, arlongHits }) => {
     return (
         <div className='d-flex flex-column' style={{ width: "200px" }}>
             <div className='text-center'>

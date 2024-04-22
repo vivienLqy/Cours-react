@@ -4,8 +4,6 @@ import Hoc from './Hoc';
 
 const Blog = () => {
 
-
-
     return (
         <Wrapper>
             <Hoc />

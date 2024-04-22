@@ -1,6 +1,9 @@
 import RoronoaZoro from '../../assets/img/zoro_character.webp';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandFist } from '@fortawesome/free-solid-svg-icons';
+import { faGratipay } from '@fortawesome/free-brands-svg-icons';
 
-const Zoro = () => {
+const Zoro = ({ countHits, zoroHits }) => {
     return (
         <div className='d-flex flex-column' style={{ width: "200px" }}>
             <div className='text-center'>
