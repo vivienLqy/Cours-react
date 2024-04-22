@@ -7,9 +7,9 @@ import withHits from './withHits';
 
 const Zoro = ({ countHits, hits, life, reduceLife }) => {
 
-    const handleClick = () => {
-        countHits('zoro'); // Appeler countHits avec 'zoro' en paramètre
-        reduceLife('zoro'); // Appeler reduceLife avec 'zoro' en paramètre
+    const handleClick = (params) => {
+        reduceLife(params); // Appeler reduceLife avec 'zoro' en paramètre
+        countHits(); // Appeler countHits avec 'zoro' en paramètre
     }
 
     return (

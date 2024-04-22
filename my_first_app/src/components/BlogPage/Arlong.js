@@ -8,8 +8,8 @@ import withHits from './withHits';
 const Arlong = ({ countHits, hits, life, reduceLife }) => {
 
     const handleClick = (params) => {
-        countHits(params); // Appeler countHits avec le paramètre 'arlong'
-        reduceLife(params); // Appeler reduceLife avec le paramètre 'arlong'
+        reduceLife(params);
+        countHits();
     }
 
     return (
