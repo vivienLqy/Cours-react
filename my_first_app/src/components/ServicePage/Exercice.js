@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 
 const Exercice = () => {
     const nameRegex = /^[a-zA-Z\- ]{2,}$/;
-    const lastNameRegex = /^[a-zA-Z\- ]{2,}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     const [firstname, setFirstname] = useState('');
@@ -31,8 +30,8 @@ const Exercice = () => {
     }, [firstname]);
 
     useEffect(() => {
-        const result = lastNameRegex.test(lastname)
-        setValidLastname(lastNameRegex.test(lastname))
+        const result = nameRegex.test(lastname)
+        setValidLastname(nameRegex.test(lastname))
     }, [lastname]);
 
 
@@ -47,7 +46,7 @@ const Exercice = () => {
                 <div className="form-floating mb-2">
                     <input
                         id="firstname"
-                        className={`form-control ${validFirstname ? 'is-valid' : 'is-invalid'}`}
+                        className={`form-control ${firstname.length < 1 ? 'form-control' : validFirstname ? 'is-valid' : 'is-invalid'}`}
                         type="text"
                         name="firstname"
                         ref={firstnameRef}
@@ -62,7 +61,7 @@ const Exercice = () => {
                 <div className="form-floating mb-2">
                     <input
                         id="lastname"
-                        className={`form-control ${validLastname ? 'is-valid' : 'is-invalid'}`}
+                        className={`form-control ${lastname.length < 1 ? 'form-control' : validLastname ? 'is-valid' : 'is-invalid'}`}
                         type="text"
                         name="lastname"
                         ref={lastnameRef}
@@ -77,7 +76,7 @@ const Exercice = () => {
                 <div className="form-floating mb-2">
                     <input
                         id="email"
-                        className={`form-control ${validEmail ? 'is-valid' : 'is-invalid'}`}
+                        className={`form-control ${email.length < 1 ? 'form-control' : validEmail ? 'is-valid' : 'is-invalid'}`}
                         type="email"
                         name="email"
                         ref={emailRef}
