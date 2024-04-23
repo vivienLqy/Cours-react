@@ -7,8 +7,8 @@ import withHits from './withHits';
 
 const Arlong = ({ countHits, hits, life, reduceLife }) => {
 
-    const handleClick = (params) => {
-        reduceLife(params);
+    const handleClick = () => {
+        reduceLife("zoro");
         countHits();
     }
 
@@ -23,7 +23,7 @@ const Arlong = ({ countHits, hits, life, reduceLife }) => {
                     <FontAwesomeIcon icon={faHandFist} /> {hits}
                 </span>
                 <span className='badge text-bg-success'>
-                    <FontAwesomeIcon icon={faGratipay} />{life}
+                    <FontAwesomeIcon icon={faGratipay} />{life}%
                 </span>
             </div>
         </div>

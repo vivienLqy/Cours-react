@@ -7,9 +7,9 @@ import withHits from './withHits';
 
 const Zoro = ({ countHits, hits, life, reduceLife }) => {
 
-    const handleClick = (params) => {
-        reduceLife(params); // Appeler reduceLife avec 'zoro' en paramètre
-        countHits(); // Appeler countHits avec 'zoro' en paramètre
+    const handleClick = () => {
+        reduceLife("arlong");
+        countHits();
     }
 
     return (
@@ -23,7 +23,7 @@ const Zoro = ({ countHits, hits, life, reduceLife }) => {
                     <FontAwesomeIcon icon={faHandFist} /> {hits}
                 </span>
                 <span className='badge text-bg-success'>
-                    <FontAwesomeIcon icon={faGratipay} />{life}
+                    <FontAwesomeIcon icon={faGratipay} />{life}%
                 </span>
             </div>
         </div>
