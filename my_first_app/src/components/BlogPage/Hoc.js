@@ -9,8 +9,8 @@ const Hoc = () => {
             <div className='container text-center'>
                 <div className='row justify-content-center'>
                     <div className='col-12 col-md-6 my-3 mb-sm-0 d-flex justify-content-between'>
-                        <Zoro />
-                        <Arlong />
+                        <Zoro name="Zoro" />
+                        <Arlong name="Arlong" />
                     </div>
                 </div>
             </div>
