@@ -4,6 +4,15 @@ import Arlong from './Arlong';
 
 const Hoc = () => {
 
+    const [life, setLife] = useState({ Zoro: 100, Arlong: 100 });
+
+    const reduceLife = (atk) => {
+        setLife((prevLife) => ({
+            ...prevLife,
+            [atk]: prevLife[atk] - 10
+        }));
+    }
+
     return (
         <div>
             <div className='container text-center'>

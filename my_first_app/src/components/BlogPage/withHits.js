@@ -5,14 +5,12 @@ const LifeContext = createContext();
 const withHits = (PersonageComponent) => {
     return (props) => {
         const [hits, setHits] = useState(0);
-        const [life, setLife] = useState({ Zoro: 100, Arlong: 100 });
+
 
         const countHits = (atk) => {
-            setHits(hits + 1);
-            setLife(prevLife => ({
-                ...prevLife,
-                [atk]: prevLife[atk] - 10
-            }));
+            setHits((currentHits) => currentHits + 1);
+
+            setLife
         };
 
         return (
