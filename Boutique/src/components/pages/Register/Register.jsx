@@ -1,24 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect, useRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { Link, Navigate } from "react-router-dom";
+import { UserContext } from "../../Contexts/UserContext";
+
+const UserRegex = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+const PasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@&#$%]).{8,23}$/;
+const EmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PhoneNumberRegex = /^\+(?:\d{1,3})?\d{10,14}$/;
 
 const Register = ({ link, msg }) => {
-    const usernameRegex = /^[a-zA-Z][a-zA-Z0-9-]{3,23}$/;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@&#$%]).{8,23}$/;
-    const emailRegex = /^[a-zA-Z0-9.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const phoneNumberRegex = /^\+(?:\d{1,3})?\d{10,14}$/;
+    const { user, setUser } = useContext(UserContext);
+    const [success, setSuccess] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const [username, setUsername] = useState('');
-    const [validUsername, setValidUsername] = useState(false);
-    const [usernameFocus, setUsernameFocus] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [validName, setValidName] = useState(false);
+    const [userFocus, setUserFocus] = useState(false);
 
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(false);
     const [emailFocus, setEmailFocus] = useState(false);
 
-    const [tel, setTel] = useState('');
-    const [validTel, setValidTel] = useState(false);
+    const [phone, setPhone] = useState('');
+    const [validPhone, setValidPhone] = useState(false);
+    const [phoneFocus, setPhoneFocus] = useState(false);
 
     const [password, setPassword] = useState('');
     const [validPassword, setValidPassword] = useState(false);
@@ -26,129 +32,171 @@ const Register = ({ link, msg }) => {
 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [validConfirmPassword, setValidConfirmPassword] = useState(false);
-    const [ConfirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
+    const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
 
-    const usernameRef = useRef(null);
-    const emailRef = useRef(null);
-    const telRef = useRef(null);
-    const passwordRef = useRef(null);
-    const confirmPasswordRef = useRef(null);
+    const userNameRef = useRef(null);
 
     useEffect(() => {
-        usernameRef.current.focus();
+        userNameRef.current.focus();
     }, []);
 
     useEffect(() => {
-        setValidUsername(usernameRegex.test(username));
-    }, [username]);
+        setValidName(UserRegex.test(userName));
+    }, [userName]);
 
     useEffect(() => {
-        setValidEmail(emailRegex.test(email));
+        setValidEmail(EmailRegex.test(email));
     }, [email]);
 
     useEffect(() => {
-        setValidPassword(passwordRegex.test(password));
+        setValidPhone(PhoneNumberRegex.test(phone));
+    }, [phone]);
+
+    useEffect(() => {
+        setValidPassword(PasswordRegex.test(password));
     }, [password]);
 
     useEffect(() => {
-        setValidTel(phoneNumberRegex.test(tel));
-    }, [tel]);
-
-    useEffect(() => {
-        setValidConfirmPassword(password === confirmPassword); // Check if passwords match
-    }, [confirmPassword, password]);
+        setValidConfirmPassword(password === confirmPassword);
+    }, [password, confirmPassword]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const isValid = validName && validEmail && validPhone && validPassword && validConfirmPassword;
+        if (isValid) {
+            setSuccess(true);
+            setUser({ name: userName, email: email, phone: phone });
+        } else {
+            setSuccess(false);
+            setErrorMsg('Les informations saisies ne sont pas valides.');
+        }
     };
 
     return (
         <div className="card">
+            {user && <Navigate to="/profil" replace />}
             <div className="card-body">
                 <h1 className="card-title">Inscription</h1>
                 <form onSubmit={handleSubmit}>
-                    <input
-                        id="username"
-                        className={`form-control ${username.length < 1 ? 'form-control' : validUsername ? 'is-valid' : 'is-invalid'}`}
-                        ref={usernameRef}
-                        value={username}
-                        autoComplete="off"
-                        onChange={(event) => setUsername(event.target.value)}
-                        type="text"
-                        name="username"
-                        onFocus={() => setUsernameFocus(true)}
-                        onBlur={() => setUsernameFocus(false)}
-                    />
-                    <div id="usernote" className={usernameFocus && !validUsername ? 'alert alert-warning' : 'offscreen d-none'}>
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                        &nbsp;Doit contenir au moins 4 caractères.<br />
+                    <div className="form-floating">
+                        <input
+                            type="text"
+                            id="userName"
+                            name="userName"
+                            autoComplete="off"
+                            placeholder="user123"
+                            required
+                            className={`form-control ${!userName ? '' : validName ? 'is-valid' : 'is-invalid'}`}
+                            ref={userNameRef}
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                            onFocus={() => setUserFocus(true)}
+                            onBlur={() => setUserFocus(false)}
+                        />
+                        <label htmlFor="userName" className="form-label d-flex">Nom d'utilisateur :</label>
                     </div>
-                    <input
-                        id="email"
-                        className={`form-control ${email.length < 1 ? 'form-control' : validEmail ? 'is-valid' : 'is-invalid'}`}
-                        ref={emailRef}
-                        autoComplete="off"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        type="email"
-                        name="email"
-                        onFocus={() => setEmailFocus(true)}
-                        onBlur={() => setEmailFocus(false)}
-                    />
-                    <div id="emailnote" className={emailFocus && !validEmail ? 'alert alert-warning' : 'offscreen d-none'}>
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                        &nbsp;Doit contenir un email valide.<br />
+                    <div id="uidnote" className={userFocus && !validName ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
+                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Entre 4 et 24 caractères.<br />
+                        Doit commencer par une lettre.<br />
+                        Doit comporter au moins une lettre et aucun caractère spécial.
                     </div>
-                    <input
-                        id="phone"
-                        className={`form-control ${tel.length < 1 ? 'form-control' : validTel ? 'is-valid' : 'is-invalid'}`}
-                        ref={telRef}
-                        value={tel}
-                        autoComplete="off"
-                        onChange={(event) => {
-                            const newValue = event.target.value.replace(/^0/, '+33');
-                            setTel(newValue);
-                        }}
-                        type="tel"
-                        name="phone"
-                    />
-                    <input
-                        id="password"
-                        className={`form-control ${password.length < 1 ? 'form-control' : validPassword ? 'is-valid' : 'is-invalid'}`}
-                        ref={passwordRef}
-                        value={password}
-                        autoComplete="off"
-                        onChange={(event) => setPassword(event.target.value)}
-                        type="password"
-                        name="password"
-                        onFocus={() => setPasswordFocus(true)}
-                        onBlur={() => setPasswordFocus(false)}
-                    />
-                    <div id="pwdnote" className={passwordFocus && !validPassword ? 'alert alert-warning' : 'offscreen d-none'}>
-                        <FontAwesomeIcon icon={faInfoCircle} />
-                        &nbsp;Doit contenir au moins 8 caractères.<br />
+                    <div className="form-floating mt-2">
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            autoComplete="off"
+                            placeholder="example@mail.com"
+                            required
+                            className={`form-control ${!email ? '' : validEmail ? 'is-valid' : 'is-invalid'}`}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            onFocus={() => setEmailFocus(true)}
+                            onBlur={() => setEmailFocus(false)}
+                        />
+                        <label htmlFor="email" className="form-label d-flex">Adresse mail :</label>
+                    </div>
+                    <div id="emailnote" className={emailFocus && !validEmail ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
+                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;L'adresse mail doit avoir le bon format.
+                    </div>
+                    <div className="form-floating mt-2">
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            autoComplete="off"
+                            placeholder="+33607080901"
+                            required
+                            className={`form-control ${!phone ? '' : validPhone ? 'is-valid' : 'is-invalid'}`}
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value.replace(/^0/, '+33'))}
+                            onFocus={() => setPhoneFocus(true)}
+                            onBlur={() => setPhoneFocus(false)}
+                        />
+                        <label htmlFor="phone" className="form-label d-flex">Numéro de téléphone :</label>
+                    </div>
+                    <div id="telnote" className={phoneFocus && !validPhone ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
+                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Le numéro de téléphone doit avoir le bon format.
+                    </div>
+                    <div className="form-floating mt-2">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            autoComplete="off"
+                            placeholder="P@s5word"
+                            required
+                            className={`form-control ${!password ? '' : validPassword ? 'is-valid' : 'is-invalid'}`}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onFocus={() => setPasswordFocus(true)}
+                            onBlur={() => setPasswordFocus(false)}
+                        />
+                        <label htmlFor="password" className="form-label d-flex">Mot de passe :</label>
+                    </div>
+                    <div id="pwdnote" className={passwordFocus && !validPassword ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
+                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Doit contenir au moins 8 caractères.<br />
                         Doit comporter au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.
                     </div>
-                    <input
-                        id="confirmPassword"
-                        className={`form-control ${confirmPassword.length < 1 ? 'form-control' : validConfirmPassword ? 'is-valid' : 'is-invalid'}`}
-                        ref={confirmPasswordRef}
-                        value={confirmPassword}
-                        onChange={(event) => setConfirmPassword(event.target.value)}
-                        type="password"
-                        name="confirmPassword"
-                    />
+                    <div className="form-floating mt-2">
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            autoComplete="off"
+                            placeholder="P@s5word"
+                            required
+                            className={`form-control ${!confirmPassword ? '' : validConfirmPassword ? 'is-valid' : 'is-invalid'}`}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onFocus={() => setConfirmPasswordFocus(true)}
+                            onBlur={() => setConfirmPasswordFocus(false)}
+                        />
+                        <label htmlFor="confirmPassword" className="form-label d-flex">Confirme mot de passe :</label>
+                    </div>
+                    <div id="confirmnote" className={confirmPasswordFocus && !validConfirmPassword ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
+                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Les mots de passe doivent correspondre.
+                    </div>
                     <div className="d-flex justify-content-between">
                         <div className="my-4 form-text text-primary">
-                            <Link className="text-decoration-none" to={link}>{msg}</Link >
+                            <Link className="text-decoration-none" to={link}>{msg}</Link>
                         </div>
-                        <div className="">
-                            <button type="submit" className="btn btn-primary btn-lg mt-2">Valider</button>
+                        <div>
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-lg mt-2"
+                                disabled={!validName || !validEmail || !validPhone || !validPassword || !validConfirmPassword}
+                            >
+                                Valider
+                            </button>
                         </div>
                     </div>
                 </form>
-            </div >
-        </div >
+                <div className={!success && errorMsg ? 'instructions mt-2 alert alert-danger' : 'offscreen d-none'} role="alert">
+                    <FontAwesomeIcon icon={faInfoCircle} />&nbsp;{errorMsg}
+                </div>
+            </div>
+        </div>
     );
 };
 
