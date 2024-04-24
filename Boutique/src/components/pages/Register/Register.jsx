@@ -6,7 +6,7 @@ const Register = ({ link, msg }) => {
     const userRegex = /^[a-zA-Z][a-zA-Z0-9-]{3,23}$/;
     const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@&#$%]).{8,23}$/;
     const emailRegex = /^[a-zA-Z0-9.%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
-    const phoneNumberRegex = /^+(?:\d{1,3})?\d{10,14}$/;
+    const PhoneNumberRegex = /^\+(?:\d{1,3})?\d{10,14}$/;
 
     const [username, setUsername] = useState('');
     const [validUsername, setValidUsername] = useState(false);
@@ -45,8 +45,8 @@ const Register = ({ link, msg }) => {
     }, [password]);
 
     useEffect(() => {
-        const result = telRegex.test(tel)
-        setValidTel(telRegex.test(tel))
+        const result = PhoneNumberRegex.test(tel)
+        setValidTel(PhoneNumberRegex.test(tel))
     }, [tel]);
 
     useEffect(() => {
@@ -70,41 +70,46 @@ const Register = ({ link, msg }) => {
                 <form onSubmit={handleSubmit}>
                     <input
                         id="username"
-                        className={`form-control ${} < 1 ? '' : `}
+                        className={`form-control ${username.length < 1 ? 'form-control' : validUsername ? 'is-valid' : 'is-invalid'}`}
                         ref={usernameRef}
                         value={username}
+                        onChange={(event) => setUsername(event.target.value)}
                         type="text"
                         name="username"
                     />
                     <input
                         id="email"
-                        className={`form-control ${email.length < 1 ? 'form-control' : email ? 'is-valid' : 'is-invalid'} `}
+                        className={`form-control ${email.length < 1 ? 'form-control' : validEmail ? 'is-valid' : 'is-invalid'}`}
                         ref={emailRef}
                         value={email}
+                        onChange={(event) => setEmail(event.target.value)}
                         type="email"
                         name="email"
                     />
                     <input
                         id="phone"
-                        className={`form-control ${} < 1 ? '' : `}
+                        className={`form-control ${tel.length < 1 ? 'form-control' : validTel ? 'is-valid' : 'is-invalid'}`}
                         ref={telRef}
                         value={tel}
+                        onChange={(event) => setTel(event.target.value)}
                         type="tel"
                         name="phone"
                     />
                     <input
                         id="password"
-                        className={`form-control ${} < 1 ? '' : `}
+                        className={`form-control ${password.length < 1 ? 'form-control' : validPassword ? 'is-valid' : 'is-invalid'}`}
                         ref={passwordRef}
                         value={password}
+                        onChange={(event) => setPassword(event.target.value)}
                         type="password"
                         name="password"
                     />
                     <input
                         id="confirmPassword"
-                        className={`form-control ${} < 1 ? '' : `}
+                        className={`form-control ${confirmPassword < 1 ? 'form-control' : validConfirmPassword ? 'is-valid' : 'is-invalid'} `}
                         ref={passwordConfirmRef}
                         value={confirmPassword}
+                        onChange={(event) => setComfirmPassword(event.target.value)}
                         type="password"
                         name="confirmPassword"
                     />
