@@ -1,80 +1,60 @@
+import useValidation from "../../customHook/useValidation";
+import { Navigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef, useContext } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { Link, Navigate } from "react-router-dom";
 import { UserContext } from "../../Contexts/UserContext";
-
-const UserRegex = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
-const PasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@&#$%]).{8,23}$/;
-const EmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const PhoneNumberRegex = /^\+(?:\d{1,3})?\d{10,14}$/;
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Register = ({ link, msg }) => {
-    const { user, setUser } = useContext(UserContext);
-    const [success, setSuccess] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
+
+    const { user, setUser } = useContext(UserContext)
+    const [success, setSuccess] = useState(false)
+    const [msgErr, setMsgErr] = useState('')
 
     const [userName, setUserName] = useState('');
-    const [validName, setValidName] = useState(false);
-    const [userFocus, setUserFocus] = useState(false);
+    const { bind: bindUserName } = useValidation(userName, setUserName, 'username');
 
     const [email, setEmail] = useState('');
-    const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
+    const { bind: bindEmail } = useValidation(email, setEmail, 'email');
 
     const [phone, setPhone] = useState('');
-    const [validPhone, setValidPhone] = useState(false);
-    const [phoneFocus, setPhoneFocus] = useState(false);
+    const { bind: bindPhone } = useValidation(phone, setPhone, 'phone');
 
-    const [password, setPassword] = useState('');
-    const [validPassword, setValidPassword] = useState(false);
-    const [passwordFocus, setPasswordFocus] = useState(false);
+    const [pwd, setPwd] = useState('');
+    const { bind: bindPwd } = useValidation(pwd, setPwd, 'password');
 
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [validConfirmPassword, setValidConfirmPassword] = useState(false);
-    const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
+    const [matchPwd, setMatchPwd] = useState('');
+    const [validMatch, setValidMatch] = useState(false);
+    const [matchFocus, setMatchFocus] = useState(false);
 
-    const userNameRef = useRef(null);
+    const userRef = useRef()
 
     useEffect(() => {
-        userNameRef.current.focus();
-    }, []);
+        userRef.current.focus();
+    }, [])
 
-    useEffect(() => {
-        setValidName(UserRegex.test(userName));
-    }, [userName]);
+    // useEffect(()=>{
+    //   const result = PasswordRegex.test(pwd);
+    //   setValidPwd(result);
+    //   const match = pwd === matchPwd;
+    //   setValidMatch(match);
+    // },[pwd, matchPwd])
 
-    useEffect(() => {
-        setValidEmail(EmailRegex.test(email));
-    }, [email]);
-
-    useEffect(() => {
-        setValidPhone(PhoneNumberRegex.test(phone));
-    }, [phone]);
-
-    useEffect(() => {
-        setValidPassword(PasswordRegex.test(password));
-    }, [password]);
-
-    useEffect(() => {
-        setValidConfirmPassword(password === confirmPassword);
-    }, [password, confirmPassword]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const isValid = validName && validEmail && validPhone && validPassword && validConfirmPassword;
-        if (isValid) {
-            setSuccess(true);
-            setUser({ name: userName, email: email, phone: phone });
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const verif = validName && validPwd && validEmail && validPhone && validMatch
+        if (verif) {
+            setSuccess(true)
+            setUser({ name: userName, email: email, phone: phone })
         } else {
-            setSuccess(false);
-            setErrorMsg('Les informations saisies ne sont pas valides.');
+            setSuccess(false)
+            setMsgErr('Les informations saisies ne sont pas valide.')
         }
-    };
+    }
 
     return (
         <div className="card">
-            {user && <Navigate to="/profil" replace />}
+            {user && <Navigate to="/profil" replace={true} />}
             <div className="card-body">
                 <h1 className="card-title">Inscription</h1>
                 <form onSubmit={handleSubmit}>
@@ -86,17 +66,19 @@ const Register = ({ link, msg }) => {
                             autoComplete="off"
                             placeholder="user123"
                             required
-                            className={`form-control ${!userName ? '' : validName ? 'is-valid' : 'is-invalid'}`}
-                            ref={userNameRef}
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                            onFocus={() => setUserFocus(true)}
-                            onBlur={() => setUserFocus(false)}
+                            ref={userRef}
+                            {...bindUserName}
                         />
-                        <label htmlFor="userName" className="form-label d-flex">Nom d'utilisateur :</label>
+                        <label htmlFor="userName" className="form-label d-flex">Nom d'utilisateur :
+                        </label>
                     </div>
-                    <div id="uidnote" className={userFocus && !validName ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
-                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Entre 4 et 24 caractères.<br />
+                    <div
+                        id="uidnote"
+                        className={isFocused && value && !isValid ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
+                        role="alert"
+                    >
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                        &nbsp;Entre 4 et 24 caractères.<br />
                         Doit commencer par une lettre.<br />
                         Doit comporter au moins une lettre et aucun caractère spécial.
                     </div>
@@ -108,36 +90,48 @@ const Register = ({ link, msg }) => {
                             autoComplete="off"
                             placeholder="example@mail.com"
                             required
-                            className={`form-control ${!email ? '' : validEmail ? 'is-valid' : 'is-invalid'}`}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            onFocus={() => setEmailFocus(true)}
-                            onBlur={() => setEmailFocus(false)}
+                            {...bindEmail}
                         />
-                        <label htmlFor="email" className="form-label d-flex">Adresse mail :</label>
+                        <label htmlFor="email" className="form-label d-flex">Adresse mail :
+                        </label>
                     </div>
-                    <div id="emailnote" className={emailFocus && !validEmail ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
-                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;L'adresse mail doit avoir le bon format.
-                    </div>
+                    {/* <div 
+            id="emailnote"
+            className={emailFocus && email && !validEmail ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
+            role="alert"
+          >
+            <FontAwesomeIcon icon={faInfoCircle}/>
+            &nbsp;L'adresse mail doit avoir le bon format.
+          </div>  */}
                     <div className="form-floating mt-2">
                         <input
                             type="tel"
-                            id="phone"
-                            name="phone"
+                            id="tel"
+                            name="tel"
                             autoComplete="off"
                             placeholder="+33607080901"
                             required
-                            className={`form-control ${!phone ? '' : validPhone ? 'is-valid' : 'is-invalid'}`}
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value.replace(/^0/, '+33'))}
-                            onFocus={() => setPhoneFocus(true)}
-                            onBlur={() => setPhoneFocus(false)}
+                            {...bindPhone}
+                        // className={!phone ? "form-control" : (validPhone ? "is-valid form-control" : "is-invalid form-control")}
+                        // aria-invalid={validPhone?"false":"true"}
+                        // onChange={(e)=>{
+                        //   const newValue = e.target.value.replace(/^0/, '+33');
+                        //   setPhone(newValue);
+                        // }}
+                        // onFocus={()=>setPhoneFocus(true)}
+                        // onBlur={()=>setPhoneFocus(false)}
                         />
-                        <label htmlFor="phone" className="form-label d-flex">Numéro de téléphone :</label>
+                        <label htmlFor="tel" className="form-label d-flex">Numéro de téléphone :
+                        </label>
                     </div>
-                    <div id="telnote" className={phoneFocus && !validPhone ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
-                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Le numéro de téléphone doit avoir le bon format.
-                    </div>
+                    {/* <div 
+            id="telnote"
+            className={phoneFocus && phone && !validPhone ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
+            role="alert"
+          >
+            <FontAwesomeIcon icon={faInfoCircle}/>
+            &nbsp;Le numéro de téléphone doit avoir le bon format.'.
+          </div>  */}
                     <div className="form-floating mt-2">
                         <input
                             type="password"
@@ -146,18 +140,25 @@ const Register = ({ link, msg }) => {
                             autoComplete="off"
                             placeholder="P@s5word"
                             required
-                            className={`form-control ${!password ? '' : validPassword ? 'is-valid' : 'is-invalid'}`}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            onFocus={() => setPasswordFocus(true)}
-                            onBlur={() => setPasswordFocus(false)}
+                            {...bindPwd}
+                        // className={!pwd ? "form-control" : (validPwd ? "is-valid form-control" : "is-invalid form-control")}
+                        // aria-invalid={validPwd?"false":"true"}
+                        // onChange={(e)=>setPwd(e.target.value)}
+                        // onFocus={()=>setPwdFocus(true)}
+                        // onBlur={()=>setPwdFocus(false)}
                         />
-                        <label htmlFor="password" className="form-label d-flex">Mot de passe :</label>
+                        <label htmlFor="password" className="form-label d-flex">Mot de passe :
+                        </label>
                     </div>
-                    <div id="pwdnote" className={passwordFocus && !validPassword ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
-                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Doit contenir au moins 8 caractères.<br />
-                        Doit comporter au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.
-                    </div>
+                    {/* <div 
+            id="pwdnote"
+            className={pwdFocus && !validPwd ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
+            role="alert"
+          >
+            <FontAwesomeIcon icon={faInfoCircle}/>
+            &nbsp;Doit contenir au moins 8 caractères.<br/>
+            Doit comporter au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.
+          </div>   */}
                     <div className="form-floating mt-2">
                         <input
                             type="password"
@@ -166,16 +167,22 @@ const Register = ({ link, msg }) => {
                             autoComplete="off"
                             placeholder="P@s5word"
                             required
-                            className={`form-control ${!confirmPassword ? '' : validConfirmPassword ? 'is-valid' : 'is-invalid'}`}
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            onFocus={() => setConfirmPasswordFocus(true)}
-                            onBlur={() => setConfirmPasswordFocus(false)}
+                            className={!matchPwd ? "form-control" : (validMatch ? "is-valid form-control" : "is-invalid form-control")}
+                            aria-invalid={validMatch ? "false" : "true"}
+                            onChange={(e) => setMatchPwd(e.target.value)}
+                            onFocus={() => setMatchFocus(true)}
+                            onBlur={() => setMatchFocus(false)}
                         />
-                        <label htmlFor="confirmPassword" className="form-label d-flex">Confirme mot de passe :</label>
+                        <label htmlFor="confirmPassword" className="form-label d-flex">Confirme mot de passe :
+                        </label>
                     </div>
-                    <div id="confirmnote" className={confirmPasswordFocus && !validConfirmPassword ? 'instructions mt-2 alert alert-warning' : 'offscreen d-none'} role="alert">
-                        <FontAwesomeIcon icon={faInfoCircle} />&nbsp;Les mots de passe doivent correspondre.
+                    <div
+                        id="confirmnote"
+                        className={matchFocus && !validMatch ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
+                        role="alert"
+                    >
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                        &nbsp;Les mots de passe doivent correspondre.
                     </div>
                     <div className="d-flex justify-content-between">
                         <div className="my-4 form-text text-primary">
@@ -185,15 +192,16 @@ const Register = ({ link, msg }) => {
                             <button
                                 type="submit"
                                 className="btn btn-primary btn-lg mt-2"
-                                disabled={!validName || !validEmail || !validPhone || !validPassword || !validConfirmPassword}
-                            >
-                                Valider
-                            </button>
+                            // disabled={!validName || !validPwd || !validEmail || !validPhone || !validMatch}
+                            >Valider</button>
                         </div>
                     </div>
                 </form>
-                <div className={!success && errorMsg ? 'instructions mt-2 alert alert-danger' : 'offscreen d-none'} role="alert">
-                    <FontAwesomeIcon icon={faInfoCircle} />&nbsp;{errorMsg}
+                <div
+                    className={!success && msgErr ? "instructions mt-2 alert alert-danger" : "offscreen d-none"}
+                    role="alert"
+                >
+                    <FontAwesomeIcon icon={faInfoCircle} />{msgErr}
                 </div>
             </div>
         </div>
