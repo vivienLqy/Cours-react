@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function useValidation(value, setValue, type) {
     const [isValid, setIsValid] = useState(false);
@@ -27,6 +27,7 @@ function useValidation(value, setValue, type) {
             'aria-invalid': !isValid
         }
     };
+
 }
 
 export default useValidation;
