@@ -23,7 +23,7 @@ const Register = ({ link, msg }) => {
     const { isValid: pwdIsValid, isFocused: pwdIsFocused, bind: bindPwd } = useValidation(pwd, setPwd, 'password');
 
     const [matchPwd, setMatchPwd] = useState('');
-    const [validMatch, setValidMatch] = useState(false);
+    const { isValid: validMatch, bind: bindMatchPwd } = useValidation(matchPwd, setMatchPwd, 'confirmPassword', pwd);
     const [matchFocus, setMatchFocus] = useState(false);
 
     const userRef = useRef();
@@ -32,9 +32,6 @@ const Register = ({ link, msg }) => {
         userRef.current.focus();
     }, []);
 
-    useEffect(() => {
-        setValidMatch(pwd === matchPwd);
-    }, [pwd, matchPwd]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -149,18 +146,13 @@ const Register = ({ link, msg }) => {
                             autoComplete="off"
                             placeholder="P@s5word"
                             required
-                            className={!matchPwd ? "form-control" : (validMatch ? "is-valid form-control" : "is-invalid form-control")}
-                            aria-invalid={validMatch ? "false" : "true"}
-                            value={matchPwd}
-                            onChange={(e) => setMatchPwd(e.target.value)}
-                            onFocus={() => setMatchFocus(true)}
-                            onBlur={() => setMatchFocus(false)}
+                            {...bindMatchPwd}
                         />
                         <label htmlFor="confirmPassword" className="form-label d-flex">Confirme mot de passe :</label>
                     </div>
                     <div
                         id="confirmnote"
-                        className={matchFocus && !validMatch ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
+                        className={(matchFocus && !validMatch) || (!validMatch && matchPwd.length > 0) ? "instructions mt-2 alert alert-warning" : "offscreen d-none"}
                         role="alert"
                     >
                         <FontAwesomeIcon icon={faInfoCircle} />

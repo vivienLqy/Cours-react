@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function useValidation(value, setValue, type) {
+function useValidation(value, setValue, type, matchValue) {
     const [isValid, setIsValid] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
 
@@ -12,8 +12,19 @@ function useValidation(value, setValue, type) {
     };
 
     useEffect(() => {
-        setIsValid(regexes[type].test(value));
-    }, [value, type]);
+        if (type === 'confirmPassword') {
+            setIsValid(value === matchValue);
+        } else {
+            setIsValid(regexes[type].test(value));
+        }
+    }, [value, type, matchValue]);
+
+    // useEffect(()=>{
+    //   const result = PasswordRegex.test(pwd);
+    //   setValidPwd(result);
+    //   const match = pwd === matchPwd;
+    //   setValidMatch(match);
+    // },[pwd, matchPwd])
 
     return {
         isValid,
